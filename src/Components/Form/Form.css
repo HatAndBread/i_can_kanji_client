@@ -1,0 +1,10 @@
+.Form {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  align-items: left;
+}
+
+.Form button {
+  width: fit-content;
+}
