@@ -1,2 +1,17 @@
 .App {
 }
+
+button {
+  padding: 8px 16px 8px 16px;
+  transition: 0.4s;
+  background-color: snow;
+  border-radius: 4px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: slategray;
+}
+
+button:hover {
+  background-color: pink;
+  color: red;
+}

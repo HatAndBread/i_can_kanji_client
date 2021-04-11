@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import ModalContainer from './Components/Modal/ModalContainer';
 import About from './Pages/About/About';
 import StudySet from './Pages/StudySet/StudySet';
 import Login from './Pages/Login/Login';
@@ -10,8 +11,10 @@ interface AppContextInterface {
   baseUrl: string;
   loginInfo: object | null;
   setLoginInfo: React.Dispatch<React.SetStateAction<LoginInfo | null>>;
+  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+  setOpenModal: React.Dispatch<React.SetStateAction<string | null>>;
   getHeader: () => {};
-  isLoggedIn: ()=> boolean
+  isLoggedIn: () => boolean;
 }
 
 export const AppCtx = createContext<AppContextInterface | null>(null);
@@ -23,6 +26,8 @@ type LoginInfo = {
 
 function App(): JSX.Element {
   const [loginInfo, setLoginInfo] = useState<LoginInfo | null>(null);
+  const [openModal, setOpenModal] = useState<string | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string>('')
   const getHeader = (): {
     'Content-Type': string,
     uid?: string,
@@ -44,6 +49,8 @@ function App(): JSX.Element {
     baseUrl: process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://?',
     loginInfo,
     setLoginInfo,
+    setErrorMessage,
+    setOpenModal,
     getHeader,
     isLoggedIn: () => (loginInfo ? true : false)
   };
@@ -89,6 +96,7 @@ function App(): JSX.Element {
               <Link to="/sign-up">Sign Up</Link>
             </>
           )}
+          <ModalContainer openModal={openModal} errorMessage={errorMessage}/>
         </div>
         <Switch>
           <Route path="/about" exact>

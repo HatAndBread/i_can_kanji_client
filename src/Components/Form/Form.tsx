@@ -15,6 +15,8 @@ const Form = ({ title, url, method }: Props): JSX.Element => {
   const [password, setPassword] = useState('');
   const [redirected, setRedirected] = useState(false);
   const ctx = useContext(AppCtx);
+  const setErrorMessage = ctx?.setErrorMessage;
+  const setOpenModal = ctx?.setOpenModal;
   console.log(ctx?.getHeader())
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
@@ -32,7 +34,18 @@ const Form = ({ title, url, method }: Props): JSX.Element => {
     }
     const data = await res.json();
     console.log(data)
-    setRedirected(true)
+    if (data.errors) {
+      console.log(data.errors)
+      if (Array.isArray(data.errors)) {
+        setErrorMessage && setErrorMessage(data.errors.join('. '))
+        setOpenModal && setOpenModal('error')
+      } else {
+        setErrorMessage && setErrorMessage('Something went wrong. Please try again later.');
+        setOpenModal && setOpenModal('error');
+      }
+    } else {
+      setRedirected(true);
+    }
   };
   const handleChange = (e: React.FormEvent<HTMLInputElement>): void => {
     if (e.currentTarget.name === 'email') {
