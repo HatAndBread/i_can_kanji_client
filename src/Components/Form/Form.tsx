@@ -2,6 +2,7 @@
 import { useContext, useState } from 'react';
 import {AppCtx} from '../../App'
 import './Form.css';
+
 type Props = {
   title?: string
   url: string;
@@ -25,6 +26,9 @@ const Form = ({ title, url, method }: Props): JSX.Element => {
     const accessToken = res.headers.get('access-token');
     const client = res.headers.get('client')
     const uid = res.headers.get('uid');
+    if (client && accessToken && uid) {
+      localStorage.setItem('appInfo', JSON.stringify({accessToken, client, uid}))
+    }
     console.log(`%c${accessToken},${client},${uid}`, 'color: pink;')
     const data = await res.json();
     console.log(data)
