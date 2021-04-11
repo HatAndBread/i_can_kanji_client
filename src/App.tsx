@@ -8,53 +8,87 @@ import './App.css';
 
 interface AppContextInterface {
   baseUrl: string;
-  appInfo: object | null;
-  setAppInfo: React.Dispatch<React.SetStateAction<AppInfo | null>>;
+  loginInfo: object | null;
+  setLoginInfo: React.Dispatch<React.SetStateAction<LoginInfo | null>>;
+  getHeader: () => {};
+  isLoggedIn: ()=> boolean
 }
 
 export const AppCtx = createContext<AppContextInterface | null>(null);
-type AppInfo = {
-  token: string | null,
-  uid: string | null,
-  client: string | null
+type LoginInfo = {
+  accessToken: string,
+  uid: string,
+  client: string,
 }
 
 function App(): JSX.Element {
-  const [appInfo, setAppInfo] = useState<AppInfo | null>(null)
+  const [loginInfo, setLoginInfo] = useState<LoginInfo | null>(null);
+  const getHeader = (): {
+    'Content-Type': string,
+    uid?: string,
+    client?: string,
+    'access-token'?: string
+  } => {
+    if (loginInfo) {
+      return {
+        'Content-Type': 'application/json',
+        'access-token': loginInfo.accessToken,
+        uid: loginInfo.uid,
+        client: loginInfo.client
+      };
+    }
+    return { 'Content-Type': 'application/json' };
+  }
+
   const appCtx: AppContextInterface = {
     baseUrl: process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://?',
-    appInfo,
-    setAppInfo
+    loginInfo,
+    setLoginInfo,
+    getHeader,
+    isLoggedIn: () => (loginInfo ? true : false)
   };
   const handleClick = async () => {
-    const res = await fetch(`${appCtx.baseUrl}/home`);
+    const options = {
+      method: 'get',
+      headers: getHeader()
+    }
+
+    const res = await fetch(`${appCtx.baseUrl}/home`, options);
     console.log(res);
     const data = await res.json();
     console.log(data);
   };
   useEffect(() => {
-    const info = localStorage.getItem('appInfo')
+    const info = localStorage.getItem('loginInfo')
     if (info) {
       const obj = JSON.parse(info);
-      setAppInfo({ token: obj.accessToken, uid: obj.uid, client: obj.client })
+      setLoginInfo({ accessToken: obj.accessToken, uid: obj.uid, client: obj.client })
     } else {
       console.log('NOT LOGGED IN')
     }
   }, []);
 
   useEffect(() => {
-    console.log(appInfo, '🌈');
-  }, [appInfo]);
+    console.log(loginInfo, '🌈');
+  }, [loginInfo]);
   return (
     <AppCtx.Provider value={appCtx}>
       <Router>
         <div className="App">
           <button onClick={handleClick}>Click me</button>
+          <Link to="/">Home</Link>
           <Link to="/about">About</Link>
           <Link to="/study-set">Study Set</Link>
-          <Link to="/login">Login</Link>
-          <Link to="/sign-up">Sign Up</Link>
-          <a href="/" onClick={()=>localStorage.clear()}>Sign Out</a>
+          {appCtx.isLoggedIn() ? (
+            <a href="/" onClick={() => localStorage.clear()}>
+              Sign Out
+            </a>
+          ) : (
+            <>
+              <Link to="/login">Login</Link>
+              <Link to="/sign-up">Sign Up</Link>
+            </>
+          )}
         </div>
         <Switch>
           <Route path="/about" exact>
