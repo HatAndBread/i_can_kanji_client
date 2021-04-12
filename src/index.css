@@ -9,6 +9,7 @@
 
 body {
   margin: 0;
+  background-image: url('./Assets/bg.png');
 }
 
 button {
@@ -24,11 +25,36 @@ button {
 }
 
 button:hover {
-  background-color: pink;
-  color: red;
+  background-color: rgb(219, 237, 248);
+  color: rgb(0, 140, 255);
+  border-color: rgb(0, 140, 255);
 }
 
 a {
   text-decoration: none;
   color: slategray;
+  transition: 0.4s;
+}
+
+a:hover {
+  color: rgb(0, 140, 255);
+}
+
+select,
+textarea,
+input[type='text'],
+input[type='password'],
+input[type='datetime'],
+input[type='datetime-local'],
+input[type='date'],
+input[type='month'],
+input[type='time'],
+input[type='week'],
+input[type='number'],
+input[type='email'],
+input[type='url'],
+input[type='search'],
+input[type='tel'],
+input[type='color'] {
+  font-size: 16px;
 }

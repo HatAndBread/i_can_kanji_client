@@ -1,0 +1,55 @@
+.StudySet {
+  padding: 16px;
+}
+.NewWordForm {
+  margin-bottom: 32px;
+  padding: 16px;
+  border-radius: 4px;
+  background-color: rgba(240, 248, 248, 0.7);
+  box-shadow: rgba(200, 200, 200, 0.3) 0px 0px 4px 4px;
+}
+.new-word-inputs {
+  display: flex;
+}
+
+.NewWordForm img {
+  height: 28px;
+  width: 28px;
+}
+
+.input-container {
+  flex-grow: 1;
+  display: grid;
+  grid-template-columns: 72px auto;
+}
+
+.input-container label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.NewWordForm input {
+  outline-style: none;
+  background-color: transparent;
+  box-shadow: none;
+  border-top-style: none;
+  border-left-style: none;
+  border-right-style: none;
+  margin: 16px;
+  min-width: 100px;
+}
+.NewWordForm .garbage-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+.NewWordForm input:focus {
+  border-color: lightblue;
+}
+
+@media only screen and (max-width: 800px) {
+  .new-word-inputs {
+    flex-direction: column;
+  }
+}

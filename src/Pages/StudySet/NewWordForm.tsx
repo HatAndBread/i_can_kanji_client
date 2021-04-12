@@ -39,11 +39,56 @@ const NewWordForm = ({ index, newWords, setNewWords, garbageClick }: Props): JSX
     console.log(newWords);
   }, [newWords]);
     return (
-      <form className="NewWordForm" onSubmit={(e) => e.preventDefault()} onChange={handleChange}>
-        <input type="text" name="kanji" id="kanji" defaultValue={wordData.kanji} />
-        <input type="text" name="yomikata" id="yomikata" defaultValue={wordData.yomikata} />
-        <input type="text" name="definition" id="definition" defaultValue={wordData.definition} />
-        <Image src={garbageIcon} alt={'Delete'} isButton={true} className={'garbage-button'} onClick={()=>{garbageClick(index)}} />
+      <form className="NewWordForm" onSubmit={(e) => e.preventDefault()} onChange={handleChange} autoComplete="off">
+        <div className="garbage-container">
+          <Image
+            src={garbageIcon}
+            alt={'Delete'}
+            isButton={true}
+            className={'garbage-button'}
+            onClick={() => {
+              garbageClick(index);
+            }}
+          />
+        </div>
+        <div className="new-word-inputs">
+          <div className="input-container">
+            <label htmlFor="kanji" className="kanji-label">
+              Kanji:
+            </label>
+            <input
+              type="text"
+              name="kanji"
+              id="kanji"
+              defaultValue={wordData.kanji}
+              placeholder={!index ? '漢字' : ''}
+            />
+          </div>
+          <div className="input-container">
+            <label htmlFor="yomikata" className="kanji-label">
+              Yomikata:
+            </label>
+            <input
+              type="text"
+              name="yomikata"
+              id="yomikata"
+              defaultValue={wordData.yomikata}
+              placeholder={!index ? 'かんじ' : ''}
+            />
+          </div>
+          <div className="input-container">
+            <label htmlFor="definition" className="kanji-label">
+              Definition:
+            </label>
+            <input
+              type="text"
+              name="definition"
+              id="definition"
+              defaultValue={wordData.definition}
+              placeholder={!index ? 'Kanji' : ''}
+            />
+          </div>
+        </div>
       </form>
     );
 }

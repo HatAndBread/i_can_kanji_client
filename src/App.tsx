@@ -106,22 +106,22 @@ function App(): JSX.Element {
               <Link to="/sign-up">Sign Up</Link>
             </>
           )}
-          <ModalContainer openModal={openModal} errorMessage={errorMessage} warnMessage={warnMessage}/>
+          <ModalContainer openModal={openModal} errorMessage={errorMessage} warnMessage={warnMessage} />
+          <Switch>
+            <Route path="/about" exact>
+              <About />
+            </Route>
+            <Route path="/study-set" exact>
+              <StudySet />
+            </Route>
+            <Route path="/login" exact>
+              <Login />
+            </Route>
+            <Route path="/sign-up" exact>
+              <SignUp />
+            </Route>
+          </Switch>
         </div>
-        <Switch>
-          <Route path="/about" exact>
-            <About />
-          </Route>
-          <Route path="/study-set" exact>
-            <StudySet />
-          </Route>
-          <Route path="/login" exact>
-            <Login />
-          </Route>
-          <Route path="/sign-up" exact>
-            <SignUp />
-          </Route>
-        </Switch>
       </Router>
     </AppCtx.Provider>
   );
