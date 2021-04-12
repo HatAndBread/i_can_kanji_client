@@ -1,16 +1,25 @@
 import { useState } from 'react';
 
 type Props = {
-    src: string;
-    alt: string;
-    className: string;
-    onClick?: any;
+  src: string;
+  alt: string;
+  className: string;
+  onClick?: ()=> void;
+  isButton?: boolean;
 }
 
-const Image = ({ src, alt, className, onClick }: Props): JSX.Element => {
+const Image = ({ src, alt, className, onClick, isButton }: Props): JSX.Element => {
     const [error, setError] = useState(false);
     if (error) {
-        return <div className={className} onClick={onClick ? onClick : undefined}>{alt}</div>;
+        return (
+          <div
+            className={className}
+            onClick={onClick ? onClick : undefined}
+            style={isButton ? { cursor: 'pointer', fontSize: '48px' } : { fontSize: '48px' }}
+          >
+            {alt}
+          </div>
+        );
     } else {
         return (
           <img
@@ -19,6 +28,7 @@ const Image = ({ src, alt, className, onClick }: Props): JSX.Element => {
             alt="You will never see this"
             className={className}
             onClick={onClick ? onClick : undefined}
+            style={isButton ? {cursor: 'pointer'} : {}}
           ></img>
         );
     }

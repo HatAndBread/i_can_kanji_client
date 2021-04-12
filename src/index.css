@@ -10,3 +10,25 @@
 body {
   margin: 0;
 }
+
+button {
+  padding: 8px 16px 8px 16px;
+  transition: 0.4s;
+  background-color: snow;
+  border-radius: 4px;
+  border-style: solid;
+  border-width: 1px;
+  color: slategray;
+  border-color: slategray;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: pink;
+  color: red;
+}
+
+a {
+  text-decoration: none;
+  color: slategray;
+}

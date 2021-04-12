@@ -12,14 +12,19 @@
 
 .ModalBox {
   width: fit-content;
-  min-width: 280px;
+  position: relative;
+  min-width: 250px;
   min-height: 100px;
   padding: 16px;
   border-radius: 4px;
   background-color: rgb(230, 230, 230);
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 0px 3px 3px;
 }
 
 .closer {
+  position: relative;
+  top: 0px;
+  left: calc(100% - 16px);
   cursor: pointer;
   width: 20px;
   height: 20px;
@@ -29,4 +34,10 @@
 .closer:hover {
   width: 24px;
   height: 24px;
+}
+
+@media only screen and (max-width: 600px) {
+  .ModalBox {
+    max-width: 90%;
+  }
 }

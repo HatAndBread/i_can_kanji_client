@@ -12,7 +12,10 @@ interface AppContextInterface {
   loginInfo: object | null;
   setLoginInfo: React.Dispatch<React.SetStateAction<LoginInfo | null>>;
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+  setWarnMessage: React.Dispatch<React.SetStateAction<string>>;
   setOpenModal: React.Dispatch<React.SetStateAction<string | null>>;
+  modalCallback: () => void;
+  setModalCallback: React.Dispatch<React.SetStateAction<(() => void)>>;
   getHeader: () => {};
   isLoggedIn: () => boolean;
 }
@@ -28,6 +31,10 @@ function App(): JSX.Element {
   const [loginInfo, setLoginInfo] = useState<LoginInfo | null>(null);
   const [openModal, setOpenModal] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string>('')
+  const [warnMessage, setWarnMessage] = useState<string>('')
+  const [modalCallback, setModalCallback] = useState<() => void>(() => {
+
+  })
   const getHeader = (): {
     'Content-Type': string,
     uid?: string,
@@ -52,6 +59,9 @@ function App(): JSX.Element {
     setErrorMessage,
     setOpenModal,
     getHeader,
+    setWarnMessage,
+    modalCallback,
+    setModalCallback,
     isLoggedIn: () => (loginInfo ? true : false)
   };
   const handleClick = async () => {
@@ -96,7 +106,7 @@ function App(): JSX.Element {
               <Link to="/sign-up">Sign Up</Link>
             </>
           )}
-          <ModalContainer openModal={openModal} errorMessage={errorMessage}/>
+          <ModalContainer openModal={openModal} errorMessage={errorMessage} warnMessage={warnMessage}/>
         </div>
         <Switch>
           <Route path="/about" exact>
