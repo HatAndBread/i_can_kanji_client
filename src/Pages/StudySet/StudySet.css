@@ -42,10 +42,24 @@
 .NewWordForm .garbage-container {
   width: 100%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
 }
 .NewWordForm input:focus {
   border-color: lightblue;
+}
+
+.card-index {
+  display: flex;
+  font-size: 16px;
+  justify-content: center;
+  align-items: center;
+  border-style: solid;
+  border-width: 1px;
+  border-color: slategray;
+  border-radius: 50%;
+  text-align: center;
+  width: 24px;
+  height: 24px;
 }
 
 @media only screen and (max-width: 800px) {

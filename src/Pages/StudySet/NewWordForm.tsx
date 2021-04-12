@@ -1,6 +1,5 @@
 
 import Image from '../../Components/Image'
-import { useEffect } from 'react';
 import hasKey from '../../helpers/hasKey';
 import garbageIcon from '../../Assets/garbage.png';
 
@@ -29,18 +28,16 @@ const NewWordForm = ({ index, newWords, setNewWords, garbageClick }: Props): JSX
   const wordData = newWords[index];
   const handleChange = (e: React.FormEvent<HTMLFormElement>):void => {
      const target = e.target as HTMLInputElement
-     console.log(target.value, target.name)
      if (hasKey(wordData, target.name)) {
      wordData[target.name] = target.value;
      setNewWords(newWords.map((newWord)=>newWord))
      }
   };
-  useEffect(() => {
-    console.log(newWords);
-  }, [newWords]);
     return (
       <form className="NewWordForm" onSubmit={(e) => e.preventDefault()} onChange={handleChange} autoComplete="off">
         <div className="garbage-container">
+          <p className="card-index">{index + 1}</p>
+          <h3>{newWords[index].kanji.length ? newWords[index].kanji : 'New Word'}</h3>
           <Image
             src={garbageIcon}
             alt={'Delete'}
