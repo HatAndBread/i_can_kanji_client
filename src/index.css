@@ -40,6 +40,21 @@ a:hover {
   color: rgb(0, 140, 255);
 }
 
+input[type='text'],
+input[type='password'],
+input[type='email'] {
+  outline-style: none;
+  background-color: transparent;
+  box-shadow: none;
+  border-top-style: none;
+  border-left-style: none;
+  border-right-style: none;
+}
+input[type='text']:focus,
+input[type='password']:focus,
+input[type='email']:focus {
+  border-color: lightblue;
+}
 select,
 textarea,
 input[type='text'],

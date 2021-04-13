@@ -9,7 +9,7 @@ type Props = {
 const WarnModal = ({ warnMessage}: Props): JSX.Element => {
     const ctx = useContext(AppCtx);
     const okClick = () => {
-        ctx?.modalCallback();
+      typeof ctx?.modalCallback === 'function' && ctx?.modalCallback();
         const newCallback = ()=>{}
         ctx?.setModalCallback(() => newCallback)
         ctx?.setOpenModal(null)

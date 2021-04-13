@@ -32,9 +32,8 @@ function App(): JSX.Element {
   const [openModal, setOpenModal] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [warnMessage, setWarnMessage] = useState<string>('')
-  const [modalCallback, setModalCallback] = useState<() => void>(() => {
-
-  })
+  const cb = () => {};
+  const [modalCallback, setModalCallback] = useState<() => void>(() => cb)
   const getHeader = (): {
     'Content-Type': string,
     uid?: string,

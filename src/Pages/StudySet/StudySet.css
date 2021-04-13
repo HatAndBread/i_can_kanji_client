@@ -2,6 +2,7 @@
   padding: 16px;
 }
 .NewWordForm {
+  margin-top: 32px;
   margin-bottom: 32px;
   padding: 16px;
   border-radius: 4px;
@@ -44,9 +45,6 @@
   display: flex;
   justify-content: space-between;
 }
-.NewWordForm input:focus {
-  border-color: lightblue;
-}
 
 .card-index {
   display: flex;
@@ -62,8 +60,41 @@
   height: 24px;
 }
 
+.save-set-btn {
+  font-size: x-large;
+}
+
+.study-set-settings {
+  padding: 16px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 4px;
+  background-color: rgba(240, 248, 248, 0.7);
+  box-shadow: rgba(200, 200, 200, 0.3) 0px 0px 4px 4px;
+  margin-bottom: 16px;
+}
+
+.title-input {
+  display: grid;
+  overflow: hidden;
+  grid-template-columns: 72px auto;
+  flex-grow: 0.3;
+}
 @media only screen and (max-width: 800px) {
   .new-word-inputs {
     flex-direction: column;
+  }
+  .study-set-settings {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .study-set-settings > * {
+    margin-bottom: 16px;
+  }
+  .title-input {
+    flex-grow: 1;
   }
 }
