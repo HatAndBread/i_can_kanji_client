@@ -26,7 +26,7 @@ const StudySet = (): JSX.Element => {
     ctx?.setOpenModal('warn');
     const callback = () => {
       newWords.splice(index, 1);
-      console.log(newWords, '🌈')
+      console.log(newWords, '🌈');
       setNewWords(newWords.map((word) => word));
     };
     ctx?.setModalCallback(() => callback);
@@ -35,16 +35,16 @@ const StudySet = (): JSX.Element => {
     const options = {
       method: 'post',
       headers: ctx?.getHeader(),
-      body: JSON.stringify({words: newWords, public: publicAvailable, name: title})
+      body: JSON.stringify({ words: newWords, public: publicAvailable, name: title })
     };
-    const res = await fetch(ctx?.baseUrl + '/study_sets', options)
-    ctx && updateLoginInfo(res, ctx)
+    const res = await fetch(ctx?.baseUrl + '/study_sets', options);
+    ctx && updateLoginInfo(res, ctx);
     const data = await res.json();
     console.log(data);
     if (data.errors || data.error || data.exception) {
       if (data.errors) {
-        ctx?.setErrorMessage(data.errors.join('. '))
-      }else if (
+        ctx?.setErrorMessage(data.errors.join('. '));
+      } else if (
         data.exception &&
         data.exception ===
           `#<ActiveRecord::RecordInvalid: Validation failed: Name That name has already been usedf.text_area :attribute>`
@@ -52,30 +52,34 @@ const StudySet = (): JSX.Element => {
         ctx?.setErrorMessage('That name has already been used. Please select a different name.');
       } else {
         ctx?.setErrorMessage('Study set was unable to set. Please try again later.');
-      };
-      ctx?.setOpenModal('error')
+      }
+      ctx?.setOpenModal('error');
     } else if (!data) {
       ctx?.setErrorMessage(data.errors.join('Server error. Please try again later.'));
       ctx?.setOpenModal('error');
     } else {
-      console.log('YAY')
+      ctx?.setPopUpMessage('Successfully saved!');
     }
-  }
+  };
 
   const submitSet = () => {
-    console.log(title, newWords, publicAvailable)
-    const allItemsAreFilled = newWords.every((word) => word.kanji.length && word.yomikata.length && word.definition.length)
+    console.log(title, newWords, publicAvailable);
+    const allItemsAreFilled = newWords.every(
+      (word) => word.kanji.length && word.yomikata.length && word.definition.length
+    );
     if (!title.length) {
       ctx?.setErrorMessage('Please add a title to your study set.');
-      ctx?.setOpenModal('error')
+      ctx?.setOpenModal('error');
     } else if (!allItemsAreFilled) {
       ctx?.setErrorMessage('Please fill in all required fields.');
       ctx?.setOpenModal('error');
     } else {
-      submit()
+      submit();
     }
-  }
-  useEffect(() => { console.log(publicAvailable) }, [publicAvailable])
+  };
+  useEffect(() => {
+    console.log(publicAvailable);
+  }, [publicAvailable]);
 
   return (
     <div className="StudySet">

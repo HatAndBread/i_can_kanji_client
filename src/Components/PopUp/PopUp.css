@@ -1,0 +1,9 @@
+.PopUp {
+  background-color: rgba(169, 203, 248, 0.556);
+  position: fixed;
+  top: 100vh;
+  height: 100px;
+  padding: 24px;
+  border-top-right-radius: 8px;
+  transition: 0.3s;
+}

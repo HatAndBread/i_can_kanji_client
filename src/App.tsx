@@ -4,7 +4,8 @@ import ModalContainer from './Components/Modal/ModalContainer';
 import About from './Pages/About/About';
 import StudySet from './Pages/StudySet/StudySet';
 import Login from './Pages/Login/Login';
-import SignUp from './Pages/SignUp/SignUp'
+import SignUp from './Pages/SignUp/SignUp';
+import PopUp from './Components/PopUp/PopUp';
 import './App.css';
 
 export interface AppContextInterface {
@@ -14,31 +15,33 @@ export interface AppContextInterface {
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
   setWarnMessage: React.Dispatch<React.SetStateAction<string>>;
   setOpenModal: React.Dispatch<React.SetStateAction<string | null>>;
+  setPopUpMessage: React.Dispatch<React.SetStateAction<string>>;
   modalCallback: () => void;
-  setModalCallback: React.Dispatch<React.SetStateAction<(() => void)>>;
+  setModalCallback: React.Dispatch<React.SetStateAction<() => void>>;
   getHeader: () => {};
   isLoggedIn: () => boolean;
 }
 
 export const AppCtx = createContext<AppContextInterface | null>(null);
 type LoginInfo = {
-  accessToken: string,
-  uid: string,
-  client: string,
-}
+  accessToken: string;
+  uid: string;
+  client: string;
+};
 
 function App(): JSX.Element {
   const [loginInfo, setLoginInfo] = useState<LoginInfo | null>(null); // has user's study sets. No loginInfo means signed out
-  const [openModal, setOpenModal] = useState<string | null>(null)
-  const [errorMessage, setErrorMessage] = useState<string>('')
-  const [warnMessage, setWarnMessage] = useState<string>('')
+  const [openModal, setOpenModal] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [warnMessage, setWarnMessage] = useState<string>('');
+  const [popUpMessage, setPopUpMessage] = useState<string>('');
   const cb = () => {};
-  const [modalCallback, setModalCallback] = useState<() => void>(() => cb)
+  const [modalCallback, setModalCallback] = useState<() => void>(() => cb);
   const getHeader = (): {
-    'Content-Type': string,
-    uid?: string,
-    client?: string,
-    'access-token'?: string
+    'Content-Type': string;
+    uid?: string;
+    client?: string;
+    'access-token'?: string;
   } => {
     if (loginInfo) {
       return {
@@ -49,7 +52,7 @@ function App(): JSX.Element {
       };
     }
     return { 'Content-Type': 'application/json' };
-  }
+  };
 
   const appCtx: AppContextInterface = {
     baseUrl: process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://?',
@@ -61,13 +64,14 @@ function App(): JSX.Element {
     setWarnMessage,
     modalCallback,
     setModalCallback,
+    setPopUpMessage,
     isLoggedIn: () => (loginInfo ? true : false)
   };
   const handleClick = async () => {
     const options = {
       method: 'get',
       headers: getHeader()
-    }
+    };
 
     const res = await fetch(`${appCtx.baseUrl}/home`, options);
     console.log(res);
@@ -75,12 +79,12 @@ function App(): JSX.Element {
     console.log(data);
   };
   useEffect(() => {
-    const info = localStorage.getItem('loginInfo')
+    const info = localStorage.getItem('loginInfo');
     if (info) {
       const obj = JSON.parse(info);
-      setLoginInfo({ accessToken: obj.accessToken, uid: obj.uid, client: obj.client })
+      setLoginInfo({ accessToken: obj.accessToken, uid: obj.uid, client: obj.client });
     } else {
-      console.log('NOT LOGGED IN')
+      console.log('NOT LOGGED IN');
     }
   }, []);
 
@@ -106,6 +110,7 @@ function App(): JSX.Element {
             </>
           )}
           <ModalContainer openModal={openModal} errorMessage={errorMessage} warnMessage={warnMessage} />
+          <PopUp message={popUpMessage} />
           <Switch>
             <Route path="/about" exact>
               <About />
