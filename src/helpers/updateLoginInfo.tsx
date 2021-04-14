@@ -1,6 +1,7 @@
+// Do this after each request to server to update tokens
+import { AppContextInterface } from '../App';
 
-
-const updateLoginInfo = (httpRes: Response, ctx: any): void => {
+const updateLoginInfo = (httpRes: Response, ctx: AppContextInterface): void => {
   const accessToken = httpRes.headers.get('access-token');
   const client = httpRes.headers.get('client');
   const uid = httpRes.headers.get('uid');

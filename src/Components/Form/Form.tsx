@@ -27,7 +27,7 @@ const Form = ({ title, url, method }: Props): JSX.Element => {
       headers: ctx?.getHeader(),
       body: JSON.stringify({ email, password })
     });
-    updateLoginInfo(res, ctx);
+    ctx && updateLoginInfo(res, ctx);
     const data = await res.json();
     console.log(data)
     if (data.errors) {

@@ -7,7 +7,7 @@ import Login from './Pages/Login/Login';
 import SignUp from './Pages/SignUp/SignUp'
 import './App.css';
 
-interface AppContextInterface {
+export interface AppContextInterface {
   baseUrl: string;
   loginInfo: object | null;
   setLoginInfo: React.Dispatch<React.SetStateAction<LoginInfo | null>>;
@@ -28,7 +28,7 @@ type LoginInfo = {
 }
 
 function App(): JSX.Element {
-  const [loginInfo, setLoginInfo] = useState<LoginInfo | null>(null);
+  const [loginInfo, setLoginInfo] = useState<LoginInfo | null>(null); // has user's study sets. No loginInfo means signed out
   const [openModal, setOpenModal] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [warnMessage, setWarnMessage] = useState<string>('')

@@ -38,9 +38,28 @@ const StudySet = (): JSX.Element => {
       body: JSON.stringify({words: newWords, public: publicAvailable, name: title})
     };
     const res = await fetch(ctx?.baseUrl + '/study_sets', options)
-    updateLoginInfo(res, ctx)
+    ctx && updateLoginInfo(res, ctx)
     const data = await res.json();
     console.log(data);
+    if (data.errors || data.error || data.exception) {
+      if (data.errors) {
+        ctx?.setErrorMessage(data.errors.join('. '))
+      }else if (
+        data.exception &&
+        data.exception ===
+          `#<ActiveRecord::RecordInvalid: Validation failed: Name That name has already been usedf.text_area :attribute>`
+      ) {
+        ctx?.setErrorMessage('That name has already been used. Please select a different name.');
+      } else {
+        ctx?.setErrorMessage('Study set was unable to set. Please try again later.');
+      };
+      ctx?.setOpenModal('error')
+    } else if (!data) {
+      ctx?.setErrorMessage(data.errors.join('Server error. Please try again later.'));
+      ctx?.setOpenModal('error');
+    } else {
+      console.log('YAY')
+    }
   }
 
   const submitSet = () => {
