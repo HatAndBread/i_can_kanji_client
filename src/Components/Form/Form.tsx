@@ -3,6 +3,7 @@ import { useContext, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import {AppCtx} from '../../App'
 import './Form.css';
+import updateLoginInfo from '../../helpers/updateLoginInfo'
 
 type Props = {
   title?: string
@@ -26,12 +27,7 @@ const Form = ({ title, url, method }: Props): JSX.Element => {
       headers: ctx?.getHeader(),
       body: JSON.stringify({ email, password })
     });
-    const accessToken = res.headers.get('access-token');
-    const client = res.headers.get('client')
-    const uid = res.headers.get('uid');
-    if (client && accessToken && uid) {
-      localStorage.setItem('loginInfo', JSON.stringify({accessToken, client, uid}))
-    }
+    updateLoginInfo(res, ctx);
     const data = await res.json();
     console.log(data)
     if (data.errors) {

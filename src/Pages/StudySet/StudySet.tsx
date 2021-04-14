@@ -5,6 +5,7 @@ import Image from '../../Components/Image';
 import './StudySet.css';
 import addIcon from '../../Assets/add.png';
 import Switch from '../../Components/Switch/Switch';
+import updateLoginInfo from '../../helpers/updateLoginInfo';
 
 const StudySet = (): JSX.Element => {
   const bottomRef = useRef<HTMLDivElement | null>(null);
@@ -37,6 +38,7 @@ const StudySet = (): JSX.Element => {
       body: JSON.stringify({words: newWords, public: publicAvailable, name: title})
     };
     const res = await fetch(ctx?.baseUrl + '/study_sets', options)
+    updateLoginInfo(res, ctx)
     const data = await res.json();
     console.log(data);
   }

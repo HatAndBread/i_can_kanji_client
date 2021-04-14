@@ -33,7 +33,6 @@ const NewWordForm = ({ index, newWords, setNewWords, garbageClick }: Props): JSX
       setNewWords(newWords.map((newWord) => newWord));
     }
   };
-  console.log(wordData, 'GGGGG')
 
   return (
     <form className="NewWordForm" onSubmit={(e) => e.preventDefault()} onChange={handleChange} autoComplete="off">
