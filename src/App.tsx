@@ -1,16 +1,20 @@
-import { createContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import ModalContainer from './Components/Modal/ModalContainer';
 import About from './Pages/About/About';
 import StudySet from './Pages/StudySet/StudySet';
 import Login from './Pages/Login/Login';
 import SignUp from './Pages/SignUp/SignUp';
+import MySets from './Pages/MySets/MySets';
 import PopUp from './Components/PopUp/PopUp';
 import './App.css';
 
 export interface AppContextInterface {
+  currentUser: CurrentUser | null;
   baseUrl: string;
   loginInfo: object | null;
+  initializeUserData: () => void;
+  setCurrentUser: React.Dispatch<React.SetStateAction<CurrentUser | null>>;
   setLoginInfo: React.Dispatch<React.SetStateAction<LoginInfo | null>>;
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
   setWarnMessage: React.Dispatch<React.SetStateAction<string>>;
@@ -29,14 +33,19 @@ type LoginInfo = {
   client: string;
 };
 
+export type CurrentUser = {
+  study_sets: { name: string; words: { kanji: string; yomikata: string; definition: string }[] }[];
+  name: string;
+};
+
 function App(): JSX.Element {
+  const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
   const [loginInfo, setLoginInfo] = useState<LoginInfo | null>(null); // has user's study sets. No loginInfo means signed out
   const [openModal, setOpenModal] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [warnMessage, setWarnMessage] = useState<string>('');
   const [popUpMessage, setPopUpMessage] = useState<string>('');
-  const cb = () => {};
-  const [modalCallback, setModalCallback] = useState<() => void>(() => cb);
+  const [modalCallback, setModalCallback] = useState<() => void>(() => () => {});
   const getHeader = (): {
     'Content-Type': string;
     uid?: string;
@@ -54,10 +63,31 @@ function App(): JSX.Element {
     return { 'Content-Type': 'application/json' };
   };
 
+  const initializeUserData = () => {
+    const info = localStorage.getItem('loginInfo');
+    if (info) {
+      const obj = JSON.parse(info);
+      setLoginInfo({ accessToken: obj.accessToken, uid: obj.uid, client: obj.client });
+      const user = localStorage.getItem('currentUser');
+      console.log(typeof user);
+      if (user) {
+        setCurrentUser(JSON.parse(user));
+      }
+    } else {
+      localStorage.clear();
+    }
+  };
+
+  useEffect(() => {
+    initializeUserData();
+  }, []);
   const appCtx: AppContextInterface = {
     baseUrl: process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://?',
+    currentUser,
+    setCurrentUser,
     loginInfo,
     setLoginInfo,
+    initializeUserData,
     setErrorMessage,
     setOpenModal,
     getHeader,
@@ -67,40 +97,23 @@ function App(): JSX.Element {
     setPopUpMessage,
     isLoggedIn: () => (loginInfo ? true : false)
   };
-  const handleClick = async () => {
-    const options = {
-      method: 'get',
-      headers: getHeader()
-    };
 
-    const res = await fetch(`${appCtx.baseUrl}/home`, options);
-    console.log(res);
-    const data = await res.json();
-    console.log(data);
-  };
-  useEffect(() => {
-    const info = localStorage.getItem('loginInfo');
-    if (info) {
-      const obj = JSON.parse(info);
-      setLoginInfo({ accessToken: obj.accessToken, uid: obj.uid, client: obj.client });
-    } else {
-      console.log('NOT LOGGED IN');
-    }
-  }, []);
-
-  useEffect(() => {
-    console.log(loginInfo, '🌈');
-  }, [loginInfo]);
   return (
     <AppCtx.Provider value={appCtx}>
       <Router>
         <div className="App">
-          <button onClick={handleClick}>Click me</button>
           <Link to="/">Home</Link>
           <Link to="/about">About</Link>
           <Link to="/study-set">Study Set</Link>
+          <Link to="/my-sets">My Study Sets</Link>
           {appCtx.isLoggedIn() ? (
-            <a href="/" onClick={() => localStorage.clear()}>
+            <a
+              href="/"
+              onClick={() => {
+                localStorage.clear();
+                setCurrentUser(null);
+              }}
+            >
               Sign Out
             </a>
           ) : (
@@ -123,6 +136,9 @@ function App(): JSX.Element {
             </Route>
             <Route path="/sign-up" exact>
               <SignUp />
+            </Route>
+            <Route path="/my-sets" exact>
+              <MySets />
             </Route>
           </Switch>
         </div>

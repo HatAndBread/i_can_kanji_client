@@ -7,7 +7,7 @@ import addIcon from '../../Assets/add.png';
 import Switch from '../../Components/Switch/Switch';
 import updateLoginInfo from '../../helpers/updateLoginInfo';
 
-const StudySet = (): JSX.Element => {
+const StudySet = ({ edit }: { edit?: boolean }): JSX.Element => {
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const ctx = useContext(AppCtx);
   const [newWords, setNewWords] = useState([{ kanji: '', yomikata: '', romaji: '', definition: '' }]);
@@ -58,6 +58,8 @@ const StudySet = (): JSX.Element => {
       ctx?.setErrorMessage(data.errors.join('Server error. Please try again later.'));
       ctx?.setOpenModal('error');
     } else {
+      localStorage.setItem('currentUser', JSON.stringify(data));
+      ctx?.setCurrentUser(data);
       ctx?.setPopUpMessage('Successfully saved!');
     }
   };

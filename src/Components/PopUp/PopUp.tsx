@@ -33,7 +33,7 @@ const PopUp = ({ message }: Props): JSX.Element => {
       }}
     >
       <div style={{ float: 'right' }}>
-        <Image src={closeIcon} alt={'X'} className={'pop-up-closer'} isButton={true} />
+        {/* <Image src={closeIcon} alt={'X'} className={'pop-up-closer'} isButton={true} /> */}
       </div>
       <div className="popup-message">{message}</div>
     </div>
