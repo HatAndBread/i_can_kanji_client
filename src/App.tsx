@@ -128,18 +128,25 @@ function App(): JSX.Element {
             <Route path="/about" exact>
               <About />
             </Route>
-            <Route path="/study-set" exact>
-              <StudySet />
-            </Route>
-            <Route path="/login" exact>
-              <Login />
-            </Route>
-            <Route path="/sign-up" exact>
-              <SignUp />
-            </Route>
-            <Route path="/my-sets" exact>
-              <MySets />
-            </Route>
+            {appCtx.isLoggedIn() ? (
+              <>
+                <Route path="/study-set" exact>
+                  <StudySet />
+                </Route>
+                <Route path="/my-sets" exact>
+                  <MySets />
+                </Route>
+              </>
+            ) : (
+              <>
+                <Route path="/login" exact>
+                  <Login />
+                </Route>
+                <Route path="/sign-up" exact>
+                  <SignUp />
+                </Route>
+              </>
+            )}
           </Switch>
         </div>
       </Router>
