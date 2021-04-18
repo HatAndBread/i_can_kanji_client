@@ -6,6 +6,7 @@ import StudySet from './Pages/StudySet/StudySet';
 import Login from './Pages/Login/Login';
 import SignUp from './Pages/SignUp/SignUp';
 import MySets from './Pages/MySets/MySets';
+import Write from './Pages/Write/Write';
 import PopUp from './Components/PopUp/PopUp';
 import './App.css';
 
@@ -103,6 +104,7 @@ function App(): JSX.Element {
       <Router>
         <div className="App">
           <Link to="/">Home</Link>
+          <Link to="/write">Write</Link>
           <Link to="/about">About</Link>
           <Link to="/study-set">Study Set</Link>
           <Link to="/my-sets">My Study Sets</Link>
@@ -127,6 +129,9 @@ function App(): JSX.Element {
           <Switch>
             <Route path="/about" exact>
               <About />
+            </Route>
+            <Route path="/write" exact>
+              <Write />
             </Route>
             {appCtx.isLoggedIn() ? (
               <>
