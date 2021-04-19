@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext, useRef } from 'react';
-import { AppCtx } from '../../App';
+import { AppCtx, IStudySet } from '../../App';
 import NewWordForm from './NewWordForm';
 import Image from '../../Components/Image';
 import './StudySet.css';
@@ -7,7 +7,7 @@ import addIcon from '../../Assets/add.png';
 import Switch from '../../Components/Switch/Switch';
 import makeHttpRequest from '../../helpers/makeHttpRequest';
 
-const StudySet = ({ edit }: { edit?: boolean }): JSX.Element => {
+const StudySet = ({ setBeingEdited }: { setBeingEdited?: IStudySet | null }): JSX.Element => {
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const ctx = useContext(AppCtx);
   const [newWords, setNewWords] = useState([{ kanji: '', yomikata: '', romaji: '', definition: '' }]);
@@ -74,9 +74,6 @@ const StudySet = ({ edit }: { edit?: boolean }): JSX.Element => {
       submit();
     }
   };
-  useEffect(() => {
-    console.log(publicAvailable);
-  }, [publicAvailable]);
 
   return (
     <div className="StudySet">

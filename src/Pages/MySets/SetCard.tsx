@@ -1,4 +1,5 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
+import { Redirect } from 'react-router-dom';
 import { AppCtx } from '../../App';
 import Image from '../../Components/Image';
 import MiniWordCard from './MiniWordCard';
@@ -7,6 +8,7 @@ import editIcon from '../../Assets/pencil.png';
 import makeHttpRequest from '../../helpers/makeHttpRequest';
 
 const SetCard = ({ num }: { num: number }): JSX.Element => {
+  const [redirect, setRedirect] = useState<boolean>(false);
   const ctx = useContext(AppCtx);
   const studySet = ctx?.currentUser?.study_sets[num];
   console.log(studySet, 'Study Set');
@@ -53,8 +55,12 @@ const SetCard = ({ num }: { num: number }): JSX.Element => {
             alt="edit"
             className="edit-set-button"
             isButton={true}
-            onClick={() => console.log('Edit button clicked!')}
+            onClick={() => {
+              studySet && ctx?.setSetBeingEdited(studySet);
+              setRedirect(true);
+            }}
           />
+          {redirect && <Redirect to="/study-set" exact />}
         </div>
       </div>
     </div>

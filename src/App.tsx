@@ -21,6 +21,7 @@ export interface AppContextInterface {
   setWarnMessage: React.Dispatch<React.SetStateAction<string>>;
   setOpenModal: React.Dispatch<React.SetStateAction<string | null>>;
   setPopUpMessage: React.Dispatch<React.SetStateAction<string>>;
+  setSetBeingEdited: React.Dispatch<React.SetStateAction<IStudySet | null>>;
   modalCallback: () => void;
   setModalCallback: React.Dispatch<React.SetStateAction<() => void>>;
   getHeader: () => {};
@@ -33,9 +34,13 @@ type LoginInfo = {
   uid: string;
   client: string;
 };
-
+export interface IStudySet {
+  id: number;
+  name: string;
+  words: { kanji: string; yomikata: string; definition: string }[];
+}
 export type CurrentUser = {
-  study_sets: { id: number; name: string; words: { kanji: string; yomikata: string; definition: string }[] }[];
+  study_sets: IStudySet[];
   name: string;
 };
 
@@ -46,6 +51,7 @@ function App(): JSX.Element {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [warnMessage, setWarnMessage] = useState<string>('');
   const [popUpMessage, setPopUpMessage] = useState<string>('');
+  const [setBeingEdited, setSetBeingEdited] = useState<IStudySet | null>(null);
   const [modalCallback, setModalCallback] = useState<() => void>(() => () => {});
   const getHeader = (): {
     'Content-Type': string;
@@ -96,6 +102,7 @@ function App(): JSX.Element {
     modalCallback,
     setModalCallback,
     setPopUpMessage,
+    setSetBeingEdited,
     isLoggedIn: () => (loginInfo ? true : false)
   };
 
@@ -136,7 +143,7 @@ function App(): JSX.Element {
             {appCtx.isLoggedIn() ? (
               <>
                 <Route path="/study-set" exact>
-                  <StudySet />
+                  <StudySet setBeingEdited={setBeingEdited} />
                 </Route>
                 <Route path="/my-sets" exact>
                   <MySets />
