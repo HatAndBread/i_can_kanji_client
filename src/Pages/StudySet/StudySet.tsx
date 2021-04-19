@@ -15,7 +15,7 @@ const StudySet = ({ setBeingEdited }: { setBeingEdited?: IStudySet | null }): JS
   );
   const [title, setTitle] = useState<string>(setBeingEdited ? setBeingEdited.name : '');
   const [publicAvailable, setPublicAvailable] = useState<boolean>(false);
-  console.log(setBeingEdited, 'SET BEING EDITED');
+
   const addNewWord = () => {
     newWords.push({ kanji: '', yomikata: '', definition: '' });
     setNewWords(newWords.map((newWord) => newWord));
@@ -23,6 +23,9 @@ const StudySet = ({ setBeingEdited }: { setBeingEdited?: IStudySet | null }): JS
   useEffect(() => {
     bottomRef?.current && bottomRef.current.scrollIntoView({ behavior: 'smooth' });
   }, [newWords.length, bottomRef]);
+  useEffect(() => {
+    ctx?.setSetBeingEdited(null);
+  }, [ctx]);
 
   const garbageClick = (index: number): void => {
     ctx?.setWarnMessage('Are you sure you want to delete this item?');

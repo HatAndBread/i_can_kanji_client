@@ -42,8 +42,10 @@ const Write = (): JSX.Element => {
     const curr = canvasRef?.current;
     return () => {
       if (curr) curr.remove();
+      erase = 0;
     };
   }, []);
+
   return (
     <div>
       Writing practice page!
