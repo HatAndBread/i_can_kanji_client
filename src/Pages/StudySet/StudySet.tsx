@@ -10,17 +10,20 @@ import makeHttpRequest from '../../helpers/makeHttpRequest';
 const StudySet = ({ setBeingEdited }: { setBeingEdited?: IStudySet | null }): JSX.Element => {
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const ctx = useContext(AppCtx);
-  const [newWords, setNewWords] = useState([{ kanji: '', yomikata: '', romaji: '', definition: '' }]);
-  const [title, setTitle] = useState<string>('');
+  const [newWords, setNewWords] = useState(
+    setBeingEdited ? setBeingEdited.words : [{ kanji: '', yomikata: '', definition: '' }]
+  );
+  const [title, setTitle] = useState<string>(setBeingEdited ? setBeingEdited.name : '');
   const [publicAvailable, setPublicAvailable] = useState<boolean>(false);
-
+  console.log(setBeingEdited, 'SET BEING EDITED');
   const addNewWord = () => {
-    newWords.push({ kanji: '', yomikata: '', romaji: '', definition: '' });
+    newWords.push({ kanji: '', yomikata: '', definition: '' });
     setNewWords(newWords.map((newWord) => newWord));
   };
   useEffect(() => {
     bottomRef?.current && bottomRef.current.scrollIntoView({ behavior: 'smooth' });
   }, [newWords.length, bottomRef]);
+
   const garbageClick = (index: number): void => {
     ctx?.setWarnMessage('Are you sure you want to delete this item?');
     ctx?.setOpenModal('warn');
@@ -60,7 +63,6 @@ const StudySet = ({ setBeingEdited }: { setBeingEdited?: IStudySet | null }): JS
   };
 
   const submitSet = () => {
-    console.log(title, newWords, publicAvailable);
     const allItemsAreFilled = newWords.every(
       (word) => word.kanji.length && word.yomikata.length && word.definition.length
     );
@@ -85,6 +87,7 @@ const StudySet = ({ setBeingEdited }: { setBeingEdited?: IStudySet | null }): JS
             id="set-title"
             name="set-title"
             autoComplete="off"
+            defaultValue={title}
             onChange={(e) => {
               setTitle(e.target.value);
             }}

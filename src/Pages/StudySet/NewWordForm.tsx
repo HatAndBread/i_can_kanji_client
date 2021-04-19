@@ -9,7 +9,6 @@ type Props = {
   newWords: {
     kanji: string;
     yomikata: string;
-    romaji: string;
     definition: string;
   }[];
   setNewWords: React.Dispatch<
@@ -17,7 +16,6 @@ type Props = {
       {
         kanji: string;
         yomikata: string;
-        romaji: string;
         definition: string;
       }[]
     >
