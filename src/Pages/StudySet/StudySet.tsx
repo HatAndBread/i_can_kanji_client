@@ -5,7 +5,7 @@ import Image from '../../Components/Image';
 import './StudySet.css';
 import addIcon from '../../Assets/add.png';
 import Switch from '../../Components/Switch/Switch';
-import updateLoginInfo from '../../helpers/updateLoginInfo';
+import makeHttpRequest from '../../helpers/makeHttpRequest';
 
 const StudySet = ({ edit }: { edit?: boolean }): JSX.Element => {
   const bottomRef = useRef<HTMLDivElement | null>(null);
@@ -31,37 +31,32 @@ const StudySet = ({ edit }: { edit?: boolean }): JSX.Element => {
     };
     ctx?.setModalCallback(() => callback);
   };
-  const submit = async () => {
-    const options = {
-      method: 'post',
-      headers: ctx?.getHeader(),
-      body: JSON.stringify({ words: newWords, public: publicAvailable, name: title })
-    };
-    const res = await fetch(ctx?.baseUrl + '/study_sets', options);
-    ctx && updateLoginInfo(res, ctx);
-    const data = await res.json();
-    console.log(data);
-    if (data.errors || data.error || data.exception) {
-      if (data.errors) {
-        ctx?.setErrorMessage(data.errors.join('. '));
-      } else if (
-        data.exception &&
-        data.exception ===
-          `#<ActiveRecord::RecordInvalid: Validation failed: Name That name has already been usedf.text_area :attribute>`
-      ) {
-        ctx?.setErrorMessage('That name has already been used. Please select a different name.');
-      } else {
-        ctx?.setErrorMessage('Study set was unable to set. Please try again later.');
-      }
-      ctx?.setOpenModal('error');
-    } else if (!data) {
-      ctx?.setErrorMessage(data.errors.join('Server error. Please try again later.'));
-      ctx?.setOpenModal('error');
-    } else {
-      localStorage.setItem('currentUser', JSON.stringify(data));
-      ctx?.setCurrentUser(data);
-      ctx?.setPopUpMessage('Successfully saved!');
-    }
+  const submit = () => {
+    ctx &&
+      makeHttpRequest({
+        method: 'POST',
+        path: '/study_sets',
+        updateUser: true,
+        ctx,
+        body: { words: newWords, public: publicAvailable, name: title }
+      }).then((res) => {
+        if (res.success) {
+          ctx?.setPopUpMessage('Successfully saved!');
+        } else {
+          if (res.data.errors) {
+            ctx?.setErrorMessage(res.data.errors.join('. '));
+          } else if (
+            res.data.exception &&
+            res.data.exception ===
+              `#<ActiveRecord::RecordInvalid: Validation failed: Name That name has already been usedf.text_area :attribute>`
+          ) {
+            ctx?.setErrorMessage('That name has already been used. Please select a different name.');
+          } else {
+            ctx?.setErrorMessage('Study set was unable to save. Please try again later.');
+          }
+          ctx?.setOpenModal('error');
+        }
+      });
   };
 
   const submitSet = () => {

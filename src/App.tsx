@@ -35,7 +35,7 @@ type LoginInfo = {
 };
 
 export type CurrentUser = {
-  study_sets: { name: string; words: { kanji: string; yomikata: string; definition: string }[] }[];
+  study_sets: { id: number; name: string; words: { kanji: string; yomikata: string; definition: string }[] }[];
   name: string;
 };
 

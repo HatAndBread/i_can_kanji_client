@@ -1,16 +1,16 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { AppCtx } from '../../App';
 import Image from '../../Components/Image';
 import MiniWordCard from './MiniWordCard';
 import garbageIcon from '../../Assets/garbage.png';
 import editIcon from '../../Assets/pencil.png';
+import makeHttpRequest from '../../helpers/makeHttpRequest';
 
 const SetCard = ({ num }: { num: number }): JSX.Element => {
   const ctx = useContext(AppCtx);
   const studySet = ctx?.currentUser?.study_sets[num];
-  console.log(studySet);
-  if (studySet?.name) {
-  }
+  console.log(studySet, 'Study Set');
+
   return (
     <div className="SetCard">
       <div className="set-card-title">
@@ -31,7 +31,22 @@ const SetCard = ({ num }: { num: number }): JSX.Element => {
             alt="Delete"
             className="delete-study-set-button"
             isButton={true}
-            onClick={() => console.log('delete clicked')}
+            onClick={(): void => {
+              ctx?.setWarnMessage(`Are you sure you want to delete ${studySet?.name}?`);
+              ctx?.setOpenModal('warn');
+              ctx?.setModalCallback(() => () => {
+                makeHttpRequest({
+                  method: 'DELETE',
+                  ctx,
+                  path: `/study_sets/${studySet?.id}`,
+                  updateUser: true
+                }).then((result) => {
+                  result.success
+                    ? ctx?.setPopUpMessage('Successfully deleted!')
+                    : ctx.setPopUpMessage('Error deleting study set');
+                });
+              });
+            }}
           />
           <Image
             src={editIcon}
