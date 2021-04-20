@@ -2,12 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 import keshiPath from '../../Assets/keshi.png';
 import Image from '../../Components/Image';
 
+let lastX: null | number = null;
+let lastY: null | number = null;
+
 const Write = (): JSX.Element => {
   const [width, setWidth] = useState(300);
   const [height, setHeight] = useState(300);
   const [canvasCtx, setCanvasCtx] = useState<CanvasRenderingContext2D | null | undefined>();
-  const [lastX, setLastX] = useState<null | number>(null);
-  const [lastY, setLastY] = useState<null | number>(null);
   const [currX, setCurrX] = useState<null | number>(null);
   const [currY, setCurrY] = useState<null | number>(null);
   const [pointerDown, setPointerDown] = useState(false);
@@ -25,6 +26,19 @@ const Write = (): JSX.Element => {
 
   useEffect(() => {
     if (canvasCtx) {
+      if (lastX && lastY && currX && currY) {
+        canvasCtx.beginPath();
+        canvasCtx.moveTo(lastX, lastY);
+        canvasCtx.lineTo(currX, currY);
+        lastX = currX;
+        lastY = currY;
+      } else if (currX && currY) {
+        canvasCtx.moveTo(currX - Math.floor(Math.random() * 2), currY - Math.floor(Math.random() * 2));
+        canvasCtx.lineTo(currX, currY);
+        lastX = currX;
+        lastY = currY;
+      }
+      canvasCtx.stroke();
     }
   }, [currX, currY, canvasCtx]);
 
@@ -37,12 +51,15 @@ const Write = (): JSX.Element => {
         width={width}
         height={height}
         onPointerMove={(e) => {
-          if (pointerDown) console.log(e.clientX - rect.x, e.clientY - rect.y);
+          if (pointerDown) {
+            setCurrX(e.clientX - rect.x);
+            setCurrY(e.clientY - rect.y);
+          }
         }}
         onPointerDown={() => setPointerDown(true)}
         onPointerUp={() => {
-          setLastX(null);
-          setLastY(null);
+          lastY = null;
+          lastX = null;
           setPointerDown(false);
         }}
       />
