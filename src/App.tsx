@@ -88,6 +88,10 @@ function App(): JSX.Element {
   useEffect(() => {
     initializeUserData();
   }, []);
+
+  useEffect(() => {
+    console.log('THIS IS THE SET BEING EDITED: ' + setBeingEdited);
+  }, [setBeingEdited]);
   const appCtx: AppContextInterface = {
     baseUrl: process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://?',
     currentUser,
@@ -143,7 +147,7 @@ function App(): JSX.Element {
             {appCtx.isLoggedIn() ? (
               <>
                 <Route path="/study-set" exact>
-                  <StudySet setBeingEdited={setBeingEdited} />
+                  <StudySet setBeingEdited={setBeingEdited} setSetBeingEdited={setSetBeingEdited} />
                 </Route>
                 <Route path="/my-sets" exact>
                   <MySets />

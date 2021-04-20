@@ -7,7 +7,11 @@ import addIcon from '../../Assets/add.png';
 import Switch from '../../Components/Switch/Switch';
 import makeHttpRequest from '../../helpers/makeHttpRequest';
 
-const StudySet = ({ setBeingEdited }: { setBeingEdited?: IStudySet | null }): JSX.Element => {
+type Props = {
+  setBeingEdited: IStudySet | null;
+  setSetBeingEdited: React.Dispatch<React.SetStateAction<IStudySet | null>>;
+};
+const StudySet = ({ setBeingEdited, setSetBeingEdited }: Props): JSX.Element => {
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const ctx = useContext(AppCtx);
   const [newWords, setNewWords] = useState(
@@ -23,10 +27,14 @@ const StudySet = ({ setBeingEdited }: { setBeingEdited?: IStudySet | null }): JS
   useEffect(() => {
     bottomRef?.current && bottomRef.current.scrollIntoView({ behavior: 'smooth' });
   }, [newWords.length, bottomRef]);
-  useEffect(() => {
-    ctx?.setSetBeingEdited(null);
-  }, [ctx]);
 
+  useEffect(() => {
+    return () => {
+      setSetBeingEdited(null);
+    };
+  }, [setSetBeingEdited]);
+
+  console.log(setBeingEdited, 'HO!');
   const garbageClick = (index: number): void => {
     ctx?.setWarnMessage('Are you sure you want to delete this item?');
     ctx?.setOpenModal('warn');
@@ -98,7 +106,7 @@ const StudySet = ({ setBeingEdited }: { setBeingEdited?: IStudySet | null }): JS
         </div>
         <Switch toggleState={publicAvailable} setToggleState={setPublicAvailable} label="Public: " />
         <button className="save-set-btn" onClick={submitSet}>
-          Save Study Set
+          {setBeingEdited ? 'Save Changes' : 'Save Study Set'}
         </button>
       </div>
       {newWords.map((el, index) => (
