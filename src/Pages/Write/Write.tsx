@@ -14,6 +14,7 @@ const Write = (): JSX.Element => {
   const [pointerDown, setPointerDown] = useState(false);
   const [rect, setRect] = useState<any>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
   useEffect(() => {
     const newCtx = canvasRef.current?.getContext('2d');
     setCanvasCtx(newCtx);
@@ -25,27 +26,29 @@ const Write = (): JSX.Element => {
   }, [height, width]);
 
   useEffect(() => {
-    if (canvasCtx) {
+    if (canvasCtx && currX && currY) {
       if (lastX && lastY && currX && currY) {
         canvasCtx.beginPath();
         canvasCtx.moveTo(lastX, lastY);
-        canvasCtx.lineTo(currX, currY);
-        lastX = currX;
-        lastY = currY;
       } else if (currX && currY) {
         canvasCtx.moveTo(currX - Math.floor(Math.random() * 2), currY - Math.floor(Math.random() * 2));
-        canvasCtx.lineTo(currX, currY);
-        lastX = currX;
-        lastY = currY;
       }
+      canvasCtx.lineTo(currX, currY);
+      lastX = currX;
+      lastY = currY;
       canvasCtx.stroke();
     }
   }, [currX, currY, canvasCtx]);
 
+  const erase = () => {
+    if (canvasCtx) canvasCtx.fillStyle = 'white';
+    canvasCtx?.fillRect(0, 0, width, height);
+  };
+
   return (
     <div>
       Writing practice page!
-      <Image src={keshiPath} alt="clear" className="keshi" isButton={true} onClick={() => {}} />
+      <Image src={keshiPath} alt="clear" className="keshi" isButton={true} onClick={erase} />
       <canvas
         ref={canvasRef}
         width={width}
