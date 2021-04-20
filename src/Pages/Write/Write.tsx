@@ -1,64 +1,46 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import keshiPath from '../../Assets/keshi.png';
-import P5 from 'p5';
 import Image from '../../Components/Image';
 
-let erase = 0;
-
 const Write = (): JSX.Element => {
-  const canvasRef = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState(300);
+  const [height, setHeight] = useState(300);
+  const [lastX, setLastX] = useState<null | number>(null);
+  const [lastY, setLastY] = useState<null | number>(null);
+  const [pointerDown, setPointerDown] = useState(false);
+  const [rect, setRect] = useState<any>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
-    const sketch = (p: P5) => {
-      let lastX = null;
-      let lastY = null;
-      console.log(p);
-      p.setup = () => {
-        p.createCanvas(300, 200);
-        p.background('white');
-      };
-      p.draw = () => {
-        if (erase) {
-          erase = 0;
-          p.background('white');
-        }
-        if (p.mouseIsPressed) {
-          if (lastX && lastY) {
-            p.line(lastX, lastY, p.mouseX, p.mouseY);
-            lastX = p.mouseX;
-            lastY = p.mouseY;
-          } else {
-            lastX = p.mouseX;
-            lastY = p.mouseY;
-            p.line(p.mouseX, p.mouseY, p.mouseX, p.mouseY);
-          }
-        }
-      };
-      p.mouseReleased = () => {
-        lastX = null;
-        lastY = null;
-      };
-    };
-    new P5(sketch, canvasRef.current);
-    const curr = canvasRef?.current;
-    return () => {
-      if (curr) curr.remove();
-      erase = 0;
-    };
-  }, []);
+    const canvasContext = canvasRef.current?.getContext('2d');
+    if (canvasContext) {
+      canvasContext.fillStyle = '#ffffff';
+      canvasContext.fillRect(0, 0, width, height);
+      setRect({ x: canvasRef.current?.getBoundingClientRect().x, y: canvasRef.current?.getBoundingClientRect().y });
+    }
+  }, [height, width]);
+
+  useEffect(() => {
+    console.log(rect);
+  }, [rect]);
 
   return (
     <div>
       Writing practice page!
-      <Image
-        src={keshiPath}
-        alt="clear"
-        className="keshi"
-        isButton={true}
-        onClick={() => {
-          erase = 1;
+      <Image src={keshiPath} alt="clear" className="keshi" isButton={true} onClick={() => {}} />
+      <canvas
+        ref={canvasRef}
+        width={width}
+        height={height}
+        onPointerMove={(e) => {
+          if (pointerDown) console.log(e.clientX - rect.x, e.clientY - rect.y);
+        }}
+        onPointerDown={() => setPointerDown(true)}
+        onPointerUp={() => {
+          setLastX(null);
+          setLastY(null);
+          setPointerDown(false);
         }}
       />
-      <div ref={canvasRef}></div>
     </div>
   );
 };
