@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useContext } from 'react';
 import { AppCtx, IStudySet } from '../../App';
 import keshiPath from '../../Assets/keshi.png';
 import Image from '../../Components/Image';
+import './Write.css';
 
 let lastX: null | number = null;
 let lastY: null | number = null;
@@ -75,14 +76,17 @@ const Write = (): JSX.Element => {
   }, [rect]);
 
   return (
-    <div>
-      <Image src={keshiPath} alt="clear" className="keshi" isButton={true} onClick={erase} />
-      <select onChange={handleSelectChange}>
-        {ctx?.currentUser?.study_sets.map((studySet) => (
-          <option key={studySet.id}>{studySet.name}</option>
-        ))}
-      </select>
+    <div className="Write">
+      <div className="top-tools-container">
+        <Image src={keshiPath} alt="clear" className="keshi" isButton={true} onClick={erase} />
+        <select onChange={handleSelectChange}>
+          {ctx?.currentUser?.study_sets.map((studySet) => (
+            <option key={studySet.id}>{studySet.name}</option>
+          ))}
+        </select>
+      </div>
       <canvas
+        className="main-canvas"
         ref={canvasRef}
         width={width}
         height={height}
