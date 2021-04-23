@@ -45,11 +45,11 @@ const StudySet = ({ setBeingEdited, setSetBeingEdited }: Props): JSX.Element => 
     };
     ctx?.setModalCallback(() => callback);
   };
-  const submit = () => {
+  const submit = (method: 'POST' | 'PUT') => {
     ctx &&
       makeHttpRequest({
-        method: 'POST',
-        path: '/study_sets',
+        method: method,
+        path: `/study_sets${method === 'POST' ? '' : `/${setBeingEdited?.id}`}`,
         updateUser: true,
         ctx,
         body: { words: newWords, public: publicAvailable, name: title }
@@ -73,19 +73,27 @@ const StudySet = ({ setBeingEdited, setSetBeingEdited }: Props): JSX.Element => 
       });
   };
 
-  const submitSet = () => {
+  const passesValidation = (method: 'POST' | 'PUT') => {
     const allItemsAreFilled = newWords.every(
       (word) => word.kanji.length && word.yomikata.length && word.definition.length
     );
-    if (!title.length) {
+    if (!title.length && method === 'POST') {
       ctx?.setErrorMessage('Please add a title to your study set.');
       ctx?.setOpenModal('error');
     } else if (!allItemsAreFilled) {
       ctx?.setErrorMessage('Please fill in all required fields.');
       ctx?.setOpenModal('error');
     } else {
-      submit();
+      return true;
     }
+  };
+
+  const submitSet = () => {
+    if (passesValidation('POST')) submit('POST');
+  };
+
+  const submitSetForEdit = () => {
+    if (passesValidation('PUT')) submit('PUT');
   };
 
   return (
@@ -105,7 +113,7 @@ const StudySet = ({ setBeingEdited, setSetBeingEdited }: Props): JSX.Element => 
           />
         </div>
         <Switch toggleState={publicAvailable} setToggleState={setPublicAvailable} label="Public: " />
-        <button className="save-set-btn" onClick={submitSet}>
+        <button className="save-set-btn" onClick={setBeingEdited ? submitSetForEdit : submitSet}>
           {setBeingEdited ? 'Save Changes' : 'Save Study Set'}
         </button>
       </div>
